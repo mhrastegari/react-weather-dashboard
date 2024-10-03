@@ -52,7 +52,7 @@ export function WeatherDashboard() {
   };
 
   return (
-    <div className="p-4 bg-gray-100 rounded-lg shadow-md w-full max-w-md mx-auto">
+    <div className="p-4 bg-gray-100 rounded-lg shadow-md min-h-64 w-full max-w-md mx-auto">
       <form onSubmit={handleSubmit} className="mb-4">
         <input
           type="text"
