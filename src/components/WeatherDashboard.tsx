@@ -82,7 +82,9 @@ export function WeatherDashboard() {
 
       {weather && !loading && !error && (
         <div>
-          <h1 className="text-xl font-bold">{city}</h1>
+          <h1 className="text-xl font-bold">
+            {city.charAt(0).toUpperCase() + city.slice(1).toLowerCase()}
+          </h1>
           <p className="text-lg">{weather.temperature}°C</p>
           <p>{weather.description}</p>
           <p>Humidity: {weather.humidity}%</p>
