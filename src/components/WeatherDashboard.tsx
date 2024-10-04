@@ -20,7 +20,7 @@ export function WeatherDashboard() {
     const fetchWeather = async () => {
       try {
         setLoading(true);
-        
+
         const response = await axios.get(
           `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=no`
         );
@@ -33,8 +33,12 @@ export function WeatherDashboard() {
         });
 
         setError(null);
-      } catch {
-        setError("Failed to fetch weather data.");
+      } catch (ex) {
+        if (axios.isAxiosError(ex) && ex.response?.status === 400) {
+          setError("City not found. Please enter a valid city name.");
+        } else {
+          setError("Failed to fetch weather data.");
+        }
       } finally {
         setLoading(false);
       }
@@ -52,7 +56,7 @@ export function WeatherDashboard() {
   };
 
   return (
-    <div className="p-4 bg-gray-100 rounded-lg shadow-md min-h-64 w-full max-w-md mx-auto">
+    <div className="m-4 p-4 bg-gray-100 rounded-lg shadow-md w-full max-w-md sm:max-w-lg lg:max-w-xl">
       <form onSubmit={handleSubmit} className="mb-4">
         <input
           type="text"
@@ -69,7 +73,11 @@ export function WeatherDashboard() {
         </button>
       </form>
 
-      {loading && <p>Loading...</p>}
+      {loading && (
+        <div className="min-h-32 flex justify-center items-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      )}
       {error && <p>{error}</p>}
 
       {weather && !loading && !error && (
