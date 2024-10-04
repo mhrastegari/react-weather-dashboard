@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 interface WeatherData {
@@ -47,7 +47,7 @@ export function WeatherDashboard() {
     fetchWeather();
   }, [city]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (inputCity.trim()) {
       setCity(inputCity.trim());
@@ -55,12 +55,20 @@ export function WeatherDashboard() {
     }
   };
 
+  const inputCityRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (inputCityRef.current) {
+      inputCityRef.current.focus();
+    }
+  }, [inputCity]);
+
   return (
     <div className="m-4 p-4 bg-gray-100 rounded-lg shadow-md w-full max-w-md sm:max-w-lg lg:max-w-xl">
       <form onSubmit={handleSubmit} className="mb-4">
         <input
           type="text"
           value={inputCity}
+          ref={inputCityRef}
           onChange={(e) => setInputCity(e.target.value)}
           placeholder="Enter city name"
           className="p-2 border border-gray-300 rounded w-full mb-2"
