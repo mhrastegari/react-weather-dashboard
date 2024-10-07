@@ -2,7 +2,8 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 interface WeatherData {
-  temperature: number;
+  temperatureC: number;
+  temperatureF: number;
   description: string;
   windSpeed: number;
   humidity: number;
@@ -12,6 +13,7 @@ export function WeatherDashboard() {
   const [city, setCity] = useState<string>("London");
   const [inputCity, setInputCity] = useState<string>("");
   const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [unit, setUnit] = useState<"C" | "F">("C");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,7 +28,8 @@ export function WeatherDashboard() {
         );
         const data = response.data;
         setWeather({
-          temperature: data.current.temp_c,
+          temperatureC: data.current.temp_c,
+          temperatureF: data.current.temp_f,
           description: data.current.condition.text,
           humidity: data.current.humidity,
           windSpeed: data.current.wind_kph,
@@ -86,14 +89,26 @@ export function WeatherDashboard() {
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       )}
-      {error && <p>{error}</p>}
+      {error && <p className="text-red-600 text-center">{error}</p>}
 
       {weather && !loading && !error && (
         <div>
           <h1 className="text-xl font-bold">
             {city.charAt(0).toUpperCase() + city.slice(1).toLowerCase()}
           </h1>
-          <p className="text-lg">{weather.temperature}°C</p>
+          <div className="flex justify-between items-center">
+            <p className="text-lg">
+              {unit === "C"
+                ? weather.temperatureC + "°C"
+                : weather.temperatureF + "°F"}
+            </p>
+            <button
+              onClick={() => setUnit(unit === "C" ? "F" : "C")}
+              className=" bg-transparent hover:bg-gray-300 text-black py-1 px-2 rounded"
+            >
+              Switch to {unit === "C" ? "Fahrenheit" : "Celsius"}
+            </button>
+          </div>
           <p>{weather.description}</p>
           <p>Humidity: {weather.humidity}%</p>
           <p>Wind Speed: {weather.windSpeed} kph</p>
